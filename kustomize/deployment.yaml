@@ -20,11 +20,28 @@ spec:
         prometheus.io/port: "9797"
       labels:
         app: podinfo
+    securityContext:
+      fsGroup: 1002
+      fsGroupChangePolicy: Always
+      supplementalGroups: []
+      sysctls: []
     spec:
       containers:
       - name: podinfod
         image: ghcr.io/stefanprodan/podinfo:6.5.4
         imagePullPolicy: IfNotPresent
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1002
+          seLinuxOptions: null
+          seccompProfile:
+            type: RuntimeDefault
         ports:
         - name: http
           containerPort: 9898
